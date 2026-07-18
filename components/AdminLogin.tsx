@@ -17,10 +17,10 @@ export default function AdminLogin() {
     e.preventDefault();
     setError('');
     setLoading(true);
-    try {
+   try {
       await signIn(email, password);
-    } catch {
-      setError('Wrong email or password. Try again.');
+    } catch (err: any) {
+      setError(`${err?.code || 'unknown'}: ${err?.message || 'Something went wrong.'}`);
     }
     setLoading(false);
   }
