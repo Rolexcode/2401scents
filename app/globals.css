@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.satin-hero {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #3D1B24 0%, #7A3F28 38%, #C9853F 58%, #7A3F28 78%, #3D1B24 100%);
+  background-size: 220% 220%;
+  animation: satin-flow 14s ease-in-out infinite;
+}
+@keyframes satin-flow {
+  0%, 100% { background-position: 0% 30%; }
+  50% { background-position: 100% 70%; }
+}
+.satin-sheen {
+  position: absolute;
+  inset: -20%;
+  background: linear-gradient(100deg,
+    transparent 35%,
+    rgba(255, 247, 225, 0) 42%,
+    rgba(255, 247, 225, 0.55) 49%,
+    rgba(255, 247, 225, 0.9) 50%,
+    rgba(255, 247, 225, 0.55) 51%,
+    rgba(255, 247, 225, 0) 58%,
+    transparent 65%);
+  mix-blend-mode: overlay;
+  animation: sheen-sweep 5.5s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes sheen-sweep {
+  0% { transform: translate(-45%, -15%) rotate(10deg); }
+  50% { transform: translate(10%, 8%) rotate(10deg); }
+  100% { transform: translate(65%, 25%) rotate(10deg); }
+}
