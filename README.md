@@ -21,6 +21,9 @@ Project settings → General → Your apps.
 
 In the Firebase console:
 
+
+
+
 - **Firestore Database → Rules** — paste in the contents of `firestore.rules`
   from this project, then Publish.
 - **Storage → Rules** — paste in the contents of `storage.rules`, then
