@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { X, Upload, Plus } from 'lucide-react';
 import { addProduct, updateProduct } from '@/lib/catalog';
-import { compressImage, uploadProductPhoto } from '@/lib/storage';
+import { compressImage } from '@/lib/storage';
 import type { Product, Variant } from '@/types/product';
 
 const GLOSSY = '0 1px 2px rgba(43,36,25,0.10), inset 0 1px 0 rgba(255,255,255,0.35)';
@@ -28,8 +28,7 @@ export default function ProductForm({
     product?.variants?.length ? product.variants : [{ id: newId(), label: '', price: 0 }]
   );
   const [deliveryFee, setDeliveryFee] = useState(product?.deliveryFee ? String(product.deliveryFee) : '');
-  const [photoPreview, setPhotoPreview] = useState<string | null>(product?.photoUrl || null);
-  const [photoFile, setPhotoFile] = useState<string | null>(null); // compressed data URL pending upload
+  const [photo, setPhoto] = useState<string | null>(product?.photoUrl || null);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -39,9 +38,7 @@ export default function ProductForm({
     if (!file) return;
     setUploading(true);
     try {
-      const compressed = await compressImage(file);
-      setPhotoPreview(compressed);
-      setPhotoFile(compressed);
+      setPhoto(await compressImage(file));
     } catch {
       setError('Could not process that photo. Try a different one.');
     }
@@ -73,23 +70,11 @@ export default function ProductForm({
         description: description.trim(),
         variants: cleanVariants,
         deliveryFee: deliveryFee ? Number(deliveryFee) : 0,
-        photoUrl: product?.photoUrl || null,
+        photoUrl: photo,
         inStock: product?.inStock !== false,
       };
-
-      if (product) {
-        if (photoFile) {
-          const url = await uploadProductPhoto(photoFile, product.id);
-          payload.photoUrl = url;
-        }
-        await updateProduct(product.id, payload);
-      } else {
-        const id = await addProduct(payload);
-        if (photoFile) {
-          const url = await uploadProductPhoto(photoFile, id);
-          await updateProduct(id, { photoUrl: url });
-        }
-      }
+      if (product) await updateProduct(product.id, payload);
+      else await addProduct(payload);
       onSaved();
     } catch {
       setError('Something went wrong saving this. Try again.');
@@ -112,38 +97,29 @@ export default function ProductForm({
           <label className="mt-2 flex items-center justify-center rounded-xl cursor-pointer overflow-hidden bg-surfaceAlt border border-dashed border-border" style={{ height: 160 }}>
             {uploading ? (
               <p className="text-xs text-muted">Processing…</p>
-            ) : photoPreview ? (
+            ) : photo ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
+              <img src={photo} alt="Preview" className="w-full h-full object-cover" />
             ) : (
               <div className="flex flex-col items-center gap-1 text-muted">
                 <Upload size={20} />
-                <span className="text-xs">Take or upload a photo</span>
+                <span className="text-xs">Choose a photo</span>
               </div>
             )}
-            <input type="file" accept="image/*" capture="environment" className="hidden" onChange={handlePhoto} />
+            <input type="file" accept="image/*" className="hidden" onChange={handlePhoto} />
           </label>
         </div>
 
         <div>
           <label className="text-xs uppercase tracking-wide text-muted">Perfume name</label>
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. Chanel Bleu de Chanel"
-            className="w-full mt-2 rounded-lg px-3 py-2.5 text-sm outline-none bg-surface text-ink border border-border"
-          />
+          <input value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Chanel Bleu de Chanel"
+            className="w-full mt-2 rounded-lg px-3 py-2.5 text-sm outline-none bg-surface text-ink border border-border" />
         </div>
 
         <div>
           <label className="text-xs uppercase tracking-wide text-muted">Notes / description (optional)</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="e.g. Fresh, citrus top notes…"
-            rows={2}
-            className="w-full mt-2 rounded-lg px-3 py-2.5 text-sm outline-none resize-none bg-surface text-ink border border-border"
-          />
+          <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="e.g. Fresh, citrus top notes…" rows={2}
+            className="w-full mt-2 rounded-lg px-3 py-2.5 text-sm outline-none resize-none bg-surface text-ink border border-border" />
         </div>
 
         <div>
@@ -151,19 +127,10 @@ export default function ProductForm({
           <div className="mt-2 space-y-2">
             {variants.map((v) => (
               <div key={v.id} className="flex gap-2">
-                <input
-                  value={v.label}
-                  onChange={(e) => updateVariant(v.id, 'label', e.target.value)}
-                  placeholder="e.g. 30ml"
-                  className="flex-1 rounded-lg px-3 py-2 text-sm outline-none bg-surface text-ink border border-border"
-                />
-                <input
-                  value={v.price || ''}
-                  onChange={(e) => updateVariant(v.id, 'price', e.target.value)}
-                  placeholder="Price"
-                  inputMode="numeric"
-                  className="w-28 rounded-lg px-3 py-2 text-sm outline-none bg-surface text-ink border border-border"
-                />
+                <input value={v.label} onChange={(e) => updateVariant(v.id, 'label', e.target.value)} placeholder="e.g. 30ml"
+                  className="flex-1 rounded-lg px-3 py-2 text-sm outline-none bg-surface text-ink border border-border" />
+                <input value={v.price || ''} onChange={(e) => updateVariant(v.id, 'price', e.target.value)} placeholder="Price" inputMode="numeric"
+                  className="w-28 rounded-lg px-3 py-2 text-sm outline-none bg-surface text-ink border border-border" />
                 <button onClick={() => removeVariant(v.id)} className="text-muted">
                   <X size={16} />
                 </button>
@@ -177,23 +144,14 @@ export default function ProductForm({
 
         <div>
           <label className="text-xs uppercase tracking-wide text-muted">Delivery fee (optional)</label>
-          <input
-            value={deliveryFee}
-            onChange={(e) => setDeliveryFee(e.target.value)}
-            placeholder="Leave blank if none"
-            inputMode="numeric"
-            className="w-full mt-2 rounded-lg px-3 py-2.5 text-sm outline-none bg-surface text-ink border border-border"
-          />
+          <input value={deliveryFee} onChange={(e) => setDeliveryFee(e.target.value)} placeholder="Leave blank if none" inputMode="numeric"
+            className="w-full mt-2 rounded-lg px-3 py-2.5 text-sm outline-none bg-surface text-ink border border-border" />
         </div>
 
         {error && <p className="text-xs text-alert">{error}</p>}
 
-        <button
-          onClick={handleSave}
-          disabled={saving}
-          className="w-full rounded-xl py-3.5 text-sm font-semibold text-onAccent disabled:opacity-60"
-          style={{ background: SATIN_BTN, boxShadow: GLOSSY }}
-        >
+        <button onClick={handleSave} disabled={saving} className="w-full rounded-xl py-3.5 text-sm font-semibold text-onAccent disabled:opacity-60"
+          style={{ background: SATIN_BTN, boxShadow: GLOSSY }}>
           {saving ? 'Saving…' : product ? 'Save changes' : 'Add to catalogue'}
         </button>
       </div>
