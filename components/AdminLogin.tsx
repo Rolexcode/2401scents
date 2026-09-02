@@ -17,12 +17,13 @@ export default function AdminLogin() {
     e.preventDefault();
     setError('');
     setLoading(true);
-   try {
+    try {
       await signIn(email, password);
-    } catch (err: any) {
-      setError(`${err?.code || 'unknown'}: ${err?.message || 'Something went wrong.'}`);
+    } catch {
+      setError('Incorrect email or password. Please try again.');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   return (
@@ -49,6 +50,8 @@ export default function AdminLogin() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
             autoFocus
+            required
+            autoComplete="email"
             className="w-full rounded-lg px-4 py-3 text-sm outline-none bg-surface text-ink border border-border"
           />
           <input
@@ -56,6 +59,8 @@ export default function AdminLogin() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
+            required
+            autoComplete="current-password"
             className="w-full mt-3 rounded-lg px-4 py-3 text-sm outline-none bg-surface text-ink border border-border"
           />
           {error && <p className="text-xs mt-2 text-alert">{error}</p>}
