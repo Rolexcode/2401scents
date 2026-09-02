@@ -15,8 +15,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: '2401scents — Fragrance Atelier',
-  description: 'Curated fragrances, poured daily.',
+  title: '2401 Scents — Fragrance Atelier',
+  description: 'Shop carefully selected fragrances from 2401 Scents.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
