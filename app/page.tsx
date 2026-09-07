@@ -102,7 +102,7 @@ export default function StorefrontPage() {
       <div className="flex min-h-screen items-center justify-center bg-[#F7F4EE] text-[#181512]">
         <div className="text-center">
           <p className="font-display text-3xl font-semibold tracking-[-0.03em]">{STORE_NAME}</p>
-          <p className="mt-3 text-[10px] uppercase tracking-[0.28em] text-[#756E66]">Loading collection</p>
+          <p className="mt-3 text-[10px] uppercase tracking-[0.28em] text-[#756E66]">Loading perfumes</p>
         </div>
       </div>
     );
@@ -110,154 +110,174 @@ export default function StorefrontPage() {
 
   return (
     <div className="min-h-screen bg-[#F7F4EE] pb-28 text-[#181512]">
-      <header className="border-b border-black/10">
-        <div className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-5 sm:px-8 lg:px-12">
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="font-display text-2xl font-semibold tracking-[-0.04em] sm:text-3xl"
-            aria-label="Back to top"
-          >
-            {STORE_NAME}
-          </button>
-
-          <p className="hidden text-[10px] uppercase tracking-[0.28em] text-[#756E66] md:block">
-            Fragrance, personally selected
-          </p>
-
-          <div className="flex items-center gap-5 text-xs font-medium">
-            <a
-              href={INSTAGRAM_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden underline-offset-4 hover:underline sm:inline"
-            >
-              Instagram
-            </a>
-            <a
-              href={TIKTOK_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden underline-offset-4 hover:underline sm:inline"
-            >
-              TikTok
-            </a>
+      <header className="sticky top-0 z-40 border-b border-black/10 bg-[#F7F4EE]/95 backdrop-blur-md">
+        <div className="mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-12">
+          <div className="flex items-center justify-between py-4 sm:py-5">
             <button
-              onClick={() => cart.length > 0 && setCartOpen(true)}
-              className="flex items-center gap-1.5"
-              aria-label="Open shopping bag"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="font-display text-2xl font-semibold tracking-[-0.04em] sm:text-3xl"
+              aria-label="Back to top"
             >
-              <ShoppingBag size={17} strokeWidth={1.6} />
-              <span>{cart.length}</span>
+              {STORE_NAME}
             </button>
+
+            <p className="hidden text-[10px] uppercase tracking-[0.28em] text-[#756E66] md:block">
+              Fragrance, personally selected
+            </p>
+
+            <div className="flex items-center gap-5 text-xs font-medium">
+              <a
+                href={INSTAGRAM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden underline-offset-4 hover:underline sm:inline"
+              >
+                Instagram
+              </a>
+              <a
+                href={TIKTOK_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden underline-offset-4 hover:underline sm:inline"
+              >
+                TikTok
+              </a>
+              <button
+                onClick={() => cart.length > 0 && setCartOpen(true)}
+                className="flex items-center gap-1.5"
+                aria-label="Open cart"
+              >
+                <ShoppingBag size={17} strokeWidth={1.6} />
+                <span>Cart ({cart.length})</span>
+              </button>
+            </div>
           </div>
+
+          <label className="relative block border-t border-black/10">
+            <span className="sr-only">Search perfumes</span>
+            <Search
+              size={17}
+              strokeWidth={1.6}
+              className="absolute left-0 top-1/2 -translate-y-1/2 text-[#756E66]"
+            />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search perfumes..."
+              className="w-full bg-transparent py-3.5 pl-7 pr-9 text-sm outline-none placeholder:text-[#948D84] sm:py-4"
+            />
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch('')}
+                className="absolute right-0 top-1/2 -translate-y-1/2 p-1 text-[#756E66]"
+                aria-label="Clear search"
+              >
+                <X size={16} strokeWidth={1.6} />
+              </button>
+            )}
+          </label>
         </div>
       </header>
 
       <main>
-        <section className="mx-auto grid max-w-[1440px] gap-10 px-5 py-10 sm:px-8 sm:py-14 md:grid-cols-12 md:items-center lg:px-12 lg:py-20">
-          <div className="md:col-span-6 lg:col-span-5">
-            <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.3em] text-[#6D2234]">
-              The 2401 edit
-            </p>
-            <h1 className="max-w-2xl font-display text-[clamp(3.5rem,8vw,7.5rem)] font-medium leading-[0.82] tracking-[-0.055em]">
-              Wear something memorable.
-            </h1>
-            <p className="mt-7 max-w-md text-sm leading-7 text-[#5D5750] sm:text-base">
-              {STORE_TAGLINE}. Discover scents for everyday wear, special nights and the moods in between.
-            </p>
+        {!search.trim() && (
+          <section className="mx-auto grid max-w-[1440px] gap-10 px-5 py-10 sm:px-8 sm:py-14 md:grid-cols-12 md:items-center lg:px-12 lg:py-20">
+            <div className="md:col-span-6 lg:col-span-5">
+              <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.3em] text-[#6D2234]">
+                2401 Scents
+              </p>
+              <h1 className="max-w-2xl font-display text-[clamp(3.5rem,8vw,7.5rem)] font-medium leading-[0.82] tracking-[-0.055em]">
+                Wear something memorable.
+              </h1>
+              <p className="mt-7 max-w-md text-sm leading-7 text-[#5D5750] sm:text-base">
+                {STORE_TAGLINE}. Discover perfumes for everyday wear, special nights and the moods in between.
+              </p>
 
-            <div className="mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
-              <button
-                onClick={() => shopSectionRef.current?.scrollIntoView({ behavior: 'smooth' })}
-                className="group inline-flex items-center gap-3 border-b border-[#181512] pb-1 text-xs font-semibold uppercase tracking-[0.16em]"
-              >
-                Shop the collection
-                <ArrowDown size={15} className="transition-transform group-hover:translate-y-1" />
-              </button>
-              <button
-                onClick={() => requestSectionRef.current?.scrollIntoView({ behavior: 'smooth' })}
-                className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6D2234]"
-              >
-                Find a specific scent
-              </button>
-            </div>
-          </div>
-
-          <div className="md:col-span-6 md:col-start-7 lg:col-span-6 lg:col-start-7">
-            {heroProduct?.photoUrl ? (
-              <figure className="ml-auto max-w-[620px]">
-                <div className="aspect-[4/5] overflow-hidden bg-[#E9E3DA]">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={heroProduct.photoUrl}
-                    alt={heroProduct.name}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <figcaption className="mt-3 flex items-start justify-between gap-4 border-t border-black/15 pt-3">
-                  <div>
-                    <p className="font-display text-lg font-semibold leading-none">{heroProduct.name}</p>
-                    <p className="mt-1 text-[10px] uppercase tracking-[0.2em] text-[#756E66]">Featured scent</p>
-                  </div>
-                  {heroProduct.variants[0] && (
-                    <p className="text-xs font-semibold">{formatNaira(heroProduct.variants[0].price)}</p>
-                  )}
-                </figcaption>
-              </figure>
-            ) : (
-              <div className="flex aspect-[4/5] max-w-[620px] items-end bg-[#251A1D] p-8 text-[#F7F4EE] sm:p-12">
-                <div>
-                  <p className="text-[10px] uppercase tracking-[0.28em] text-white/60">2401 Scents</p>
-                  <p className="mt-3 max-w-md font-display text-5xl font-medium leading-[0.95] tracking-[-0.04em]">
-                    Your next signature scent starts here.
-                  </p>
-                </div>
+              <div className="mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
+                <button
+                  onClick={() => shopSectionRef.current?.scrollIntoView({ behavior: 'smooth' })}
+                  className="group inline-flex items-center gap-3 border-b border-[#181512] pb-1 text-xs font-semibold uppercase tracking-[0.16em]"
+                >
+                  Shop perfumes
+                  <ArrowDown size={15} className="transition-transform group-hover:translate-y-1" />
+                </button>
+                <button
+                  onClick={() => requestSectionRef.current?.scrollIntoView({ behavior: 'smooth' })}
+                  className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6D2234]"
+                >
+                  Request a perfume
+                </button>
               </div>
-            )}
-          </div>
-        </section>
+            </div>
+
+            <div className="md:col-span-6 md:col-start-7 lg:col-span-6 lg:col-start-7">
+              {heroProduct?.photoUrl ? (
+                <figure className="ml-auto max-w-[620px]">
+                  <div className="aspect-[4/5] overflow-hidden bg-[#E9E3DA]">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={heroProduct.photoUrl}
+                      alt={heroProduct.name}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                  <figcaption className="mt-3 flex items-start justify-between gap-4 border-t border-black/15 pt-3">
+                    <div>
+                      <p className="font-display text-lg font-semibold leading-none">{heroProduct.name}</p>
+                      <p className="mt-1 text-[10px] uppercase tracking-[0.2em] text-[#756E66]">Featured perfume</p>
+                    </div>
+                    {heroProduct.variants[0] && (
+                      <p className="text-xs font-semibold">{formatNaira(heroProduct.variants[0].price)}</p>
+                    )}
+                  </figcaption>
+                </figure>
+              ) : (
+                <div className="flex aspect-[4/5] max-w-[620px] items-end bg-[#251A1D] p-8 text-[#F7F4EE] sm:p-12">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.28em] text-white/60">2401 Scents</p>
+                    <p className="mt-3 max-w-md font-display text-5xl font-medium leading-[0.95] tracking-[-0.04em]">
+                      Your next perfume starts here.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
 
         <section
           ref={shopSectionRef}
-          className="scroll-mt-8 border-t border-black/10"
+          className={`scroll-mt-28 border-t border-black/10 ${search.trim() ? 'border-t-0' : ''}`}
         >
-          <div className="mx-auto max-w-[1440px] px-5 py-12 sm:px-8 lg:px-12 lg:py-16">
-            <div className="mb-8 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#6D2234]">Shop</p>
-                <h2 className="mt-2 font-display text-4xl font-medium tracking-[-0.04em] sm:text-5xl">The collection</h2>
-                <p className="mt-2 text-xs text-[#756E66]">{inStock.length} scent{inStock.length === 1 ? '' : 's'} available</p>
-              </div>
-
-              <label className="relative block w-full sm:w-72">
-                <span className="sr-only">Search fragrances</span>
-                <Search
-                  size={16}
-                  strokeWidth={1.6}
-                  className="absolute left-0 top-1/2 -translate-y-1/2 text-[#756E66]"
-                />
-                <input
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search fragrances"
-                  className="w-full border-b border-black/30 bg-transparent py-2 pl-7 pr-2 text-sm outline-none transition-colors placeholder:text-[#948D84] focus:border-[#181512]"
-                />
-              </label>
+          <div className="mx-auto max-w-[1440px] px-5 py-10 sm:px-8 lg:px-12 lg:py-14">
+            <div className="mb-8">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#6D2234]">
+                {search.trim() ? 'Search results' : 'Shop'}
+              </p>
+              <h2 className="mt-2 font-display text-4xl font-medium tracking-[-0.04em] sm:text-5xl">
+                {search.trim() ? `Results for “${search}”` : 'Available perfumes'}
+              </h2>
+              <p className="mt-2 text-xs text-[#756E66]">
+                {search.trim()
+                  ? `${filtered.length} result${filtered.length === 1 ? '' : 's'}`
+                  : `${inStock.length} perfume${inStock.length === 1 ? '' : 's'} available`}
+              </p>
             </div>
 
             {inStock.length === 0 ? (
               <div className="border-y border-black/10 py-20 text-center">
-                <p className="font-display text-3xl font-medium">The shelf is empty right now.</p>
-                <p className="mt-2 text-sm text-[#756E66]">New scents are added regularly — check back soon.</p>
+                <p className="font-display text-3xl font-medium">No perfumes available right now.</p>
+                <p className="mt-2 text-sm text-[#756E66]">New perfumes are added regularly — check back soon.</p>
               </div>
             ) : search.trim() && filtered.length === 0 ? (
               <div className="border-y border-black/10 py-16 text-center">
-                <p className="text-sm text-[#756E66]">No matches for &quot;{search}&quot;.</p>
+                <p className="text-sm text-[#756E66]">We couldn&apos;t find &quot;{search}&quot;.</p>
                 <button
                   onClick={goAskAboutSearch}
                   className="mt-4 border-b border-[#181512] pb-1 text-xs font-semibold uppercase tracking-[0.14em]"
                 >
-                  Ask us to source it
+                  Ask us on WhatsApp
                 </button>
               </div>
             ) : (
@@ -272,16 +292,16 @@ export default function StorefrontPage() {
 
         <section
           ref={requestSectionRef}
-          className="scroll-mt-8 bg-[#331921] text-[#F7F4EE]"
+          className="scroll-mt-28 bg-[#331921] text-[#F7F4EE]"
         >
           <div className="mx-auto grid max-w-[1440px] gap-10 px-5 py-14 sm:px-8 md:grid-cols-2 md:items-end lg:px-12 lg:py-20">
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#C9AEB6]">Scent request</p>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#C9AEB6]">Can&apos;t find it?</p>
               <h2 className="mt-3 max-w-xl font-display text-5xl font-medium leading-[0.95] tracking-[-0.04em] sm:text-6xl">
-                Can&apos;t see what you&apos;re looking for?
+                Tell us the perfume you want.
               </h2>
               <p className="mt-5 max-w-md text-sm leading-6 text-white/65">
-                Send the fragrance name, brand or size. We&apos;ll continue the conversation with you on WhatsApp.
+                Send the perfume name, brand or size and we&apos;ll reply on WhatsApp.
               </p>
             </div>
 
@@ -324,8 +344,8 @@ export default function StorefrontPage() {
             {cartOpen && (
               <div className="mb-2 max-h-72 overflow-y-auto border border-black/15 bg-[#F7F4EE] p-4 shadow-[0_18px_50px_rgba(20,15,12,0.16)]">
                 <div className="mb-3 flex items-center justify-between border-b border-black/10 pb-3">
-                  <p className="font-display text-xl font-semibold">Your bag</p>
-                  <button onClick={() => setCartOpen(false)} aria-label="Close shopping bag">
+                  <p className="font-display text-xl font-semibold">Your cart</p>
+                  <button onClick={() => setCartOpen(false)} aria-label="Close cart">
                     <X size={18} strokeWidth={1.6} />
                   </button>
                 </div>
@@ -364,7 +384,7 @@ export default function StorefrontPage() {
             >
               <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em]">
                 <ShoppingBag size={17} strokeWidth={1.6} />
-                {cart.length} item{cart.length === 1 ? '' : 's'}
+                Cart ({cart.length})
               </span>
               <span className="text-sm font-semibold">{formatNaira(total)}</span>
             </button>
