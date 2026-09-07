@@ -73,7 +73,7 @@ export default function ProductCard({
           onClick={() => onAdd(product, variant)}
           className="mt-3 inline-flex items-center gap-2 border-b border-black pb-1 text-[10px] font-semibold uppercase tracking-[0.16em] transition-opacity hover:opacity-60"
         >
-          <Plus size={13} strokeWidth={1.6} /> Add to bag
+          <Plus size={13} strokeWidth={1.6} /> Add to cart
         </button>
       </div>
     </article>
