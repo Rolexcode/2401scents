@@ -1,13 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus, ChevronDown, ImageOff } from 'lucide-react';
+import { ChevronDown, ImageOff, Plus } from 'lucide-react';
 import { formatNaira } from '@/lib/config';
 import type { Product, Variant } from '@/types/product';
-
-const GLOSSY = '0 1px 2px rgba(43,36,25,0.10), inset 0 1px 0 rgba(255,255,255,0.35)';
-const SOFT_SHADOW = '0 1px 3px rgba(43,36,25,0.08)';
-const SATIN_BTN = 'linear-gradient(120deg, #6B3F2A 0%, #C9853F 50%, #6B3F2A 100%)';
 
 export default function ProductCard({
   product,
@@ -24,33 +20,40 @@ export default function ProductCard({
       : formatNaira(product.variants[0]?.price);
 
   return (
-    <div className="rounded-2xl overflow-hidden border border-border bg-surface" style={{ boxShadow: SOFT_SHADOW }}>
-      <div className="relative aspect-square bg-surfaceAlt">
-        <div className="flex items-center justify-center w-full h-full overflow-hidden">
-          {product.photoUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={product.photoUrl} alt={product.name} className="w-full h-full object-cover" />
-          ) : (
-            <ImageOff size={28} className="text-muted" />
-          )}
-        </div>
-        {product.photoUrl && (
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{ background: 'radial-gradient(circle at 28% 22%, rgba(255,255,255,0.6), transparent 55%)' }}
+    <article className="group">
+      <div className="aspect-[4/5] overflow-hidden bg-[#EAE4DC]">
+        {product.photoUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={product.photoUrl}
+            alt={product.name}
+            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
           />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-[#8B837A]">
+            <ImageOff size={26} strokeWidth={1.4} />
+          </div>
         )}
       </div>
-      <div className="p-3">
-        <p className="font-display font-semibold text-sm leading-tight text-ink">{product.name}</p>
-        <p className="text-xs mt-1 font-medium text-accent">{priceLabel}</p>
+
+      <div className="border-t border-black/10 pt-3">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h3 className="font-display text-lg font-semibold leading-[1.05] tracking-[-0.02em] sm:text-xl">
+              {product.name}
+            </h3>
+            <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-[#6D2234]">
+              {priceLabel}
+            </p>
+          </div>
+        </div>
 
         {product.variants.length > 1 && (
-          <div className="relative mt-2">
+          <div className="relative mt-3">
             <select
               value={variantIdx}
               onChange={(e) => setVariantIdx(Number(e.target.value))}
-              className="w-full appearance-none text-xs rounded-md pl-2 pr-6 py-1.5 bg-surfaceAlt text-ink border border-border"
+              className="w-full appearance-none border-b border-black/20 bg-transparent py-2 pr-6 text-xs outline-none focus:border-black"
             >
               {product.variants.map((v, i) => (
                 <option key={v.id} value={i}>
@@ -58,18 +61,21 @@ export default function ProductCard({
                 </option>
               ))}
             </select>
-            <ChevronDown size={12} className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-muted" />
+            <ChevronDown
+              size={13}
+              strokeWidth={1.5}
+              className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-[#756E66]"
+            />
           </div>
         )}
 
         <button
           onClick={() => onAdd(product, variant)}
-          className="mt-2 w-full flex items-center justify-center gap-1 rounded-lg py-1.5 text-xs font-semibold text-onAccent"
-          style={{ background: SATIN_BTN, boxShadow: GLOSSY }}
+          className="mt-3 inline-flex items-center gap-2 border-b border-black pb-1 text-[10px] font-semibold uppercase tracking-[0.16em] transition-opacity hover:opacity-60"
         >
-          <Plus size={13} /> Add to cart
+          <Plus size={13} strokeWidth={1.6} /> Add to bag
         </button>
       </div>
-    </div>
+    </article>
   );
 }
